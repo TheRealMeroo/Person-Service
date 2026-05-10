@@ -1,27 +1,66 @@
-﻿using PersonService.Domain.ValueObjects;
+﻿using PersonService.Domain.Common;
+using PersonService.Domain.ValueObjects;
 
 namespace PersonService.Domain.Entities;
 
-public class Person
+public class Person : BaseEntity
 {
-    public Guid Id { get; private set; }
     public Name FirstName { get; private set; }
     public Name LastName { get; private set; }
     public NationalCode NationalCode { get; private set; }
     public BirthDate BirthDate { get; private set; }
 
-    private Person() { }
+    #region EF Core ctor
 
-    internal Person(Guid id, Name firstName, Name lastName, NationalCode nationalCode, BirthDate birthDate)
+    private Person() : base() { }
+    #endregion
+
+    #region Internal ctor
+
+    internal Person(Name firstName,
+                    Name lastName,
+                    NationalCode nationalCode,
+                    BirthDate birthDate)
+        : base()
     {
-        Id = id;
         FirstName = firstName;
         LastName = lastName;
         NationalCode = nationalCode;
         BirthDate = birthDate;
     }
+    #endregion
 
-    public Person(string firstName, string lastName, string nationalCode, DateTime birthDate) :
-        this(Guid.NewGuid(), new Name(firstName), new Name(lastName), new NationalCode(nationalCode), new BirthDate(birthDate))
+    #region Public ctor
+
+    public Person(string firstName, string lastName,
+                  string nationalCode, DateTime birthDate)
+        : this(new Name(firstName),
+               new Name(lastName),
+               new NationalCode(nationalCode),
+               new BirthDate(birthDate))
     { }
+
+    #endregion
+
+    #region Update
+
+    public void Update(Name firstName, Name lastName, BirthDate birthDate)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        BirthDate = birthDate;
+
+        UpdatedAt = DateTime.UtcNow;
+    }
+    #endregion
+
+    #region Soft‑Delete
+
+    public void MarkDeleted()
+    {
+        IsDeleted = true;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    #endregion
 }
