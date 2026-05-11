@@ -12,10 +12,13 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Host.UseEnvironment(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"))
-            .ConfigureAppConfiguration((configuration) =>
+            .ConfigureAppConfiguration((hostingContext, configuration) =>
             {
-                configuration.AddJsonFile("appsettings.json");
-                configuration.AddEnvironmentVariables();
+                var env = hostingContext.HostingEnvironment;
+
+                configuration.AddJsonFile("appsettings.json")
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json")
+                .AddEnvironmentVariables();
             })
             .ConfigureServices((context, services) =>
             {

@@ -3,7 +3,7 @@ using PersonService.Domain.Entities;
 
 namespace PersonService.Infrastructure.Data
 {
-    internal class PersonDbContext : DbContext
+    public class PersonDbContext : DbContext
     {
         public PersonDbContext(DbContextOptions<PersonDbContext> options)
                 : base(options) { }
