@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using PersonService.Application.Commands;
 using PersonService.Domain.Entities;
+using PersonService.Domain.Factories;
 using PersonService.Domain.Interfaces.Repositories;
 
 namespace PersonService.Application.Handlers.Commands;
@@ -16,7 +17,7 @@ public class UpdatePersonCommandHandler : IRequestHandler<UpdatePersonCommand, P
 
     public async Task<Person?> Handle(UpdatePersonCommand request, CancellationToken ct)
     {
-        var entity = new Person(
+        var entity = PersonFactory.Create(
             firstName: request.FirstName,
             lastName: request.LastName,
             nationalCode: request.NationalCode,
